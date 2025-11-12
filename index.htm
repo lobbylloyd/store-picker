@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="IMG_6879.png">
   <link rel="apple-touch-icon" sizes="192x192" href="IMG_6879.png">
   <link rel="apple-touch-icon" sizes="512x512" href="IMG_6879.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="IMG_6879.png">
   <link rel="icon" type="image/png" sizes="512x512" href="IMG_6879.png">
 
   <style>
@@ -302,7 +303,7 @@
       locator: { patchSize: "large", halfSample: true },
       numOfWorkers: 2,
       frequency: 10,
-      decoder: { readers: ["ean_reader"] },  // Only EAN for reliable full codes
+      decoder: { readers: ["ean_reader"] },
       locate: true
     }, err => {
       if (err) { alert('Camera error: ' + err); stopScanner(); return; }
@@ -311,9 +312,9 @@
     Quagga.onDetected(data => {
       const code = data.codeResult.code;
       if (code && code.length >= 12) {
-        els.code.value = code;  // Only fill input, do NOT auto-add
+        els.code.value = code;
         stopScanner();
-        els.code.focus();  // Ready for quantity
+        els.code.focus();
       }
     });
   };
