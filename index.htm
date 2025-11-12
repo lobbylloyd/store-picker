@@ -19,46 +19,49 @@
     }
 
     .container {
-      padding: 1rem;
+      padding: 1.2rem;
       max-width: 100%;
     }
 
     .glass-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      padding: 1.3rem;
-      margin-bottom: 1.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     }
 
     h1 {
       text-align: center;
       font-size: 1.9rem;
-      margin: 0.5rem 0 1rem;
+      margin: 0.5rem 0 1.2rem;
       font-weight: 700;
       color: #1a1a1a;
     }
 
     h2 {
-      font-size: 1.3rem;
-      margin: 0 0 0.8rem;
+      font-size: 1.4rem;
+      margin: 0 0 1rem;
       color: #1a1a1a;
-      font-weight: 600;
+      font-weight: 700;
+      text-align: center;
     }
 
     label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin: 1rem 0 0.5rem;
       color: #1a1a1a;
+      text-align: center;
     }
 
     input, button {
       font-size: 1.1rem;
-      padding: 0.75rem;
+      padding: 0.8rem;
       border-radius: 12px;
       border: none;
       margin: 0.4rem 0;
@@ -67,7 +70,7 @@
     }
 
     input {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       color: #1a1a1a;
       text-align: center;
       font-weight: 500;
@@ -89,7 +92,7 @@
     }
 
     .btn-small {
-      padding: 0.5rem 1.1rem;
+      padding: 0.5rem 1.2rem;
       font-size: 1rem;
       width: auto;
       display: inline-block;
@@ -97,23 +100,23 @@
 
     .row {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.6rem;
       align-items: center;
       justify-content: center;
     }
 
     .qty {
-      width: 5rem;
+      width: 5.5rem;
       text-align: center;
       font-size: 1.1rem;
     }
 
     .scanner {
-      height: 230px;
+      height: 240px;
       background: #000;
       overflow: hidden;
       border-radius: 14px;
-      margin: 1rem 0;
+      margin: 1.2rem 0;
     }
 
     #barcode-canvas {
@@ -125,9 +128,9 @@
     .list-item {
       display: flex;
       justify-content: space-between;
-      padding: 0.7rem 0;
+      padding: 0.8rem 0;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 500;
     }
 
@@ -135,7 +138,7 @@
 
     .footer {
       text-align: center;
-      margin: 2rem 0 1rem;
+      margin: 2.5rem 0 1.5rem;
     }
 
     /* Centered Input */
@@ -146,12 +149,12 @@
     }
 
     .input-group input {
-      max-width: 92%;
+      max-width: 90%;
     }
 
     /* Summary: Code Left, Qty Right, Full-Width Barcode */
     .summary-item {
-      margin: 2.5rem 0;
+      margin: 3rem 0;
       padding: 0 1rem;
     }
 
@@ -159,9 +162,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       color: #1a1a1a;
     }
 
@@ -169,7 +172,7 @@
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 1.2rem;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -212,9 +215,9 @@
       <button id="add-item">Add to List</button>
     </div>
 
-    <!-- CURRENT LIST -->
+    <!-- PICKING LIST -->
     <div class="glass-card">
-      <h2>Current List (<span id="item-count">0</span>)</h2>
+      <h2>Picking List (<span id="item-count">0</span>)</h2>
       <div id="list"></div>
     </div>
 
@@ -281,18 +284,37 @@
     els.scannerBox.classList.remove('hidden'); els.stopBtn.classList.remove('hidden'); els.startBtn.classList.add('hidden');
     scannerActive = true;
     Quagga.init({
-      inputStream: { name: "Live", type: "LiveStream", target: els.canvas,
-        constraints: { facingMode: "environment", width: 640, height: 480 } },
-      locator: { patchSize: "medium", halfSample: true },
-      numOfWorkers: 2, frequency: 10,
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: els.canvas,
+        constraints: { facingMode: "environment", width: 640, height: 480 }
+      },
+      locator: { patchSize: "large", halfSample: true },
+      numOfWorkers: 2,
+      frequency: 10,
       decoder: { readers: ["code_128_reader","ean_reader","ean_8_reader","upc_reader"] },
       locate: true
-    }, err => { if (err) { alert('Camera error'); stopScanner(); return; } Quagga.start(); });
-    Quagga.onDetected(d => { els.code.value = d.codeResult.code; stopScanner(); addItem(); });
+    }, err => {
+      if (err) { alert('Camera error: ' + err); stopScanner(); return; }
+      Quagga.start();
+    });
+    Quagga.onDetected(data => {
+      const code = data.codeResult.code;
+      if (code) {
+        els.code.value = code;
+        stopScanner();
+        addItem();
+      }
+    });
   };
+
   function stopScanner() {
     if (!scannerActive) return;
-    Quagga.stop(); els.scannerBox.classList.add('hidden'); els.stopBtn.classList.add('hidden'); els.startBtn.classList.remove('hidden');
+    Quagga.stop();
+    els.scannerBox.classList.add('hidden');
+    els.stopBtn.classList.add('hidden');
+    els.startBtn.classList.remove('hidden');
     scannerActive = false;
   }
   els.stopBtn.onclick = stopScanner;
@@ -302,39 +324,26 @@
     els.summaryCard.classList.remove('hidden'); els.summaryEl.innerHTML = '';
     let text = '';
     list.forEach(item => {
-      const container = document.createElement('div');
-      container.className = 'summary-item';
-
-      const header = document.createElement('div');
-      header.className = 'summary-header';
-      header.innerHTML = `<span>${item.code}</span><span>${item.qty}</span>`;
-
-      const barcodeContainer = document.createElement('div');
-      barcodeContainer.className = 'barcode-container';
-
-      const svg = document.createElement('svg');
-      svg.className = 'barcode-svg';
-
-      barcodeContainer.appendChild(svg);
-      container.appendChild(header);
-      container.appendChild(barcodeContainer);
-      els.summaryEl.appendChild(container);
-
+      const div = document.createElement('div');
+      div.style = 'margin:2.5rem 0; text-align:center;';
+      div.innerHTML = `
+        <div style="font-weight:800; font-size:1.7rem; margin-bottom:1rem; display:flex; justify-content:space-between; padding:0 1rem;">
+          <span>${item.code}</span><span>${item.qty}</span>
+        </div>
+        <svg class="barcode-svg" data-code="${item.code}"></svg>
+      `;
+      els.summaryEl.appendChild(div);
       text += `${item.code} × ${item.qty}\n`;
-
-      // Render barcode after DOM insertion
-      requestAnimationFrame(() => {
-        JsBarcode(svg, item.code, {
+      setTimeout(() => {
+        JsBarcode(`svg[data-code="${item.code}"]`, item.code, {
           format: "CODE128",
+          lineColor: "#000",
           width: 4,
-          height: 130,
+          height: 120,
           displayValue: true,
-          fontSize: 34,
-          margin: 20,
-          background: "transparent",
-          lineColor: "#1a1a1a"
+          fontSize: 32
         });
-      });
+      }, 100);
     });
     els.copyBtn.onclick = () => navigator.clipboard.writeText(text).then(() => alert('Copied!')).catch(() => prompt('Copy:', text));
     els.summaryCard.scrollIntoView({behavior:'smooth'});
