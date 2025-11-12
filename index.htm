@@ -140,7 +140,7 @@
       div.innerHTML = `<div style="font-weight:600;">${item.code} × ${item.qty}</div><svg class="barcode-svg" data-code="${item.code}"></svg>`;
       els.summaryEl.appendChild(div);
       text += `${item.code} × ${item.qty}\n`;
-      setTimeout(() => JsBarcode(`svg[data-code="${item.code}"]`, item.code, {format:"CODE128",width:2,height:50,displayValue:true}), 50);
+      setTimeout(() => JsBarcode(`svg[data-code="${item.code}"]`, item.code, {format:"CODE128",width:4,height:100,displayValue:true}), 50);
     });
     els.copyBtn.onclick = () => navigator.clipboard.writeText(text).then(() => alert('Copied!')).catch(() => prompt('Copy:', text));
     els.summaryCard.scrollIntoView({behavior:'smooth'});
