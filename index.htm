@@ -135,13 +135,36 @@
     if (!list.length) return alert('Empty');
     els.summaryCard.classList.remove('hidden'); els.summaryEl.innerHTML = '';
     let text = '';
-    list.forEach(item => {
-      const div = document.createElement('div'); div.style = 'margin:1rem 0;text-align:center;';
-      div.innerHTML = `<div style="font-weight:600;">${item.code} × ${item.qty}</div><svg class="barcode-svg" data-code="${item.code}"></svg>`;
-      els.summaryEl.appendChild(div);
-      text += `${item.code} × ${item.qty}\n`;
-      setTimeout(() => JsBarcode(`svg[data-code="${item.code}"]`, item.code, {format:"CODE128",width:4,height:100,displayValue:true}), 50);
+   list.forEach(item => {
+  const container = document.createElement('div');
+  container.style = 'margin:2rem 0; display:flex; flex-direction:column; align-items:center; justify-content:center;';
+
+  const textDiv = document.createElement('div');
+  textDiv.style = 'font-weight:600; font-size:1.2rem; margin-bottom:0.5rem;';
+  textDiv.textContent = `${item.code} × ${item.qty}`;
+
+  const svg = document.createElement('svg');
+  svg.className = 'barcode-svg';
+  svg.setAttribute('data-code', item.code);
+  svg.style = 'width:100%; max-width:500px; height:auto;';
+
+  container.appendChild(textDiv);
+  container.appendChild(svg);
+  els.summaryEl.appendChild(container);
+
+  text += `${item.code} × ${item.qty}\n`;
+
+  setTimeout(() => {
+    JsBarcode(svg, item.code, {
+      format: "CODE128",
+      width: 4,
+      height: 100,
+      displayValue: true,
+      fontSize: 28,
+      margin: 10
     });
+  }, 50);
+});
     els.copyBtn.onclick = () => navigator.clipboard.writeText(text).then(() => alert('Copied!')).catch(() => prompt('Copy:', text));
     els.summaryCard.scrollIntoView({behavior:'smooth'});
   };
